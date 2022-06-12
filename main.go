@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -8,7 +9,7 @@ import (
 type Book struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Pages  string `json:"pages"`
+	Pages  int    `json:"pages"`
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
@@ -19,10 +20,19 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 
 func GetBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	book := Book{
+		Title:  "Lord of The Rings",
+		Author: "Tolkien",
+		Pages:  1304,
+	}
+
+	json.NewEncoder(w).Encode(book)
 }
 
 func main() {
 	http.HandleFunc("/hello", Hello)
+	http.HandleFunc("/book", GetBook)
 
 	// func(rw http.ResponseWriter, r *http.Request) {
 	// 	rw.Write([]byte("Hello"))
